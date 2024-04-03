@@ -4,8 +4,14 @@ const Project = require('../../api/models/projectModel');
 // Retrieve all projects from the database
 exports.getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.find();
-    res.json(projects);
+    count = await Project.countDocuments();
+    if (count === 0) {
+      // If no projects are found, send a 404 status code with a message
+      return res.status(404).json({ message: 'No projects found in database' });
+    }else{
+      const projects = await Project.find();
+      res.json(projects);
+    }
   } catch (error) {
     // If an error occurs, send a 500 status code with the error message
     res.status(500).json({ message: error.message });
